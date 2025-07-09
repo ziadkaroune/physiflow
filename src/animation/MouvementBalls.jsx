@@ -40,11 +40,9 @@ const ground = Matter.Bodies.rectangle(200, 390, 400, 20, {
 
     Matter.World.add(world, [circleA, circleB, ground]);
 
-    // ✅ Use Runner instead of Render.run (smoother)
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
-    // ✅ Then render manually
     Matter.Render.run(render);
 
     // cleanup
