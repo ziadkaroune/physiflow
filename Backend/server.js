@@ -1,40 +1,45 @@
-import express from 'express';
-import cors from 'cors';
+import express from "express";
+import cors from "cors";
 
 const app = express();
-
+app.use(express.json());
 const corsOptions = {
-  origin: 'http://localhost:5173',
-  methods: ['GET', 'POST'],
-  credentials: true,
-  allowedHeaders: ['Content-Type']
+  origin: "http://localhost:5173", // frontend origin you want to allow
+  methods: ["GET" , "POST"],
+  credentials: true, // if you need to send cookies/auth headers
 };
 
-app.use(cors(corsOptions));          //  global CORS middleware
-app.options('*', cors(corsOptions)); //  explicitly handle preflight OPTIONS
+app.use(cors(corsOptions));
 
-app.use(express.json());
 
-// api route
-app.post('/api/generate-simulation', (req, res) => {
-  const { prompt } = req.body;
-
-  if (prompt?.toLowerCase().includes("two balls") && prompt?.toLowerCase().includes("collide")) {
+app.post("/api/test", (req, res) => {
+    const {propmt} = req.body
+    if(propmt?.includes("two balls")){
     const jsCode = `
-      import Matter from "matter-js";
-      const engine = Matter.Engine.create();
-      const world = engine.world;
-      const ball1 = Matter.Bodies.circle(200, 200, 30, { mass: 2, restitution: 1 });
-      const ball2 = Matter.Bodies.circle(600, 200, 20, { mass: 1, restitution: 1 });
-      Matter.Body.setVelocity(ball1, { x: 3, y: 0 });
-      Matter.Body.setVelocity(ball2, { x: -2, y: 0 });
-      Matter.World.add(world, [ball1, ball2]);
-      Matter.Engine.run(engine);
+       const circleA = Matter.Bodies.circle(150, 100, 20, {
+        restitution: 0.8,
+        render: { fillStyle: "#60a5fa" },
+      });
+
+      const circleB = Matter.Bodies.circle(250, 100, 30, {
+        restitution: 0.9,
+        render: { fillStyle: "#f472b6" },
+      });
+
+      const ground = Matter.Bodies.rectangle(200, 390, 400, 20, {
+        isStatic: true,
+        render: { fillStyle: "#6b7280" },
+      });
+
+      Matter.World.add(world, [circleA, circleB, ground]);
     `;
-    res.json({ code: jsCode });
-  } else {
-    res.json({ code: "// No simulation available." });
-  }
+
+    res.json({ message: jsCode});
+    }
+    else{
+        res.json({message : " sorry we can't load this animation !"})
+    }
+  
 });
 
 app.listen(3000, () => {
