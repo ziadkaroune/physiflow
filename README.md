@@ -43,8 +43,16 @@ The goal is to enhance physics education by making physics concepts accessible a
 ```bash
 git clone https://github.com/ziadkaroune/physiflow.git
 cd interactive-physics-simulator
-npm install
 
-### Running the Development Server
+### Running (backend end)
+cd backend
+npm install
+npm install express
+node server.js
+
+### Running  (front end)
+cd frontend
+npm install
 npm run dev
 http://localhost:3000
+
